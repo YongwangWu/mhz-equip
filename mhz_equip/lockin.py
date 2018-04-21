@@ -34,7 +34,14 @@ class LockInAmplifier(Instrument):
         self._aser = trio.wrap_file(self._ser)
 
     async def is_connected(self):
-        pass
+        """Indicate whether the connection to the serial port is open or closed.
+
+        It is possible to be connected without being able to communicate. This
+        method only indicates whether the connection is open. The know whether
+        communication is possible, see #LockInAmplifier.can_communicate().
+
+        """
+        return self._ser.is_open
 
     async def can_communicate(self):
         pass

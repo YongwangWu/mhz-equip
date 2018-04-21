@@ -62,3 +62,14 @@ async def test_can_read_from_port(config_port1, config_port2):
     dummy_ser.write(b"foo")
     msg = await lia._aser.read(3)
     assert msg == b"foo", f"Read {msg}, expected `foo`"
+
+
+@pytest.mark.trio
+async def test_knows_if_connected(config_port1):
+    lia = LockInAmplifier(port_settings=config_port1)
+    await lia.connect()
+    lia._ser.reset_input_buffer()
+    lia._ser.reset_output_buffer()
+    assert await lia.is_connected()
+    lia._ser.close()
+    assert not await lia.is_connected()
